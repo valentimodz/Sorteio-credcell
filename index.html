@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Cadastre-se & Siga no Instagram</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- QRCode.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- Google Fonts Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#fdf2f8',
+              100: '#fce7f3',
+              500: '#ec4899',
+              600: '#db2777',
+              700: '#be185d',
+            },
+            insta: {
+              purple: '#833ab4',
+              red: '#fd1d1d',
+              yellow: '#fcb045',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .insta-gradient-bg {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+    .insta-text-gradient {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    @keyframes pulse-subtle {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+    .animate-subtle-pulse {
+      animation: pulse-subtle 2s infinite ease-in-out;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printArea, #printArea * {
+        visibility: visible;
+      }
+      #printArea {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-pink-500 selection:text-white">
+
+  <!-- Header / Navigation Bar -->
+  <header class="w-full bg-white/80 backdrop-blur-md sticky top-0 z-30 border-b border-slate-200">
+    <div class="max-w-md mx-auto px-4 h-14 flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <!-- Gatilho Secreto: 5 cliques rápidos aqui abrem o painel admin -->
+        <button id="secretAdminTrigger" type="button" class="w-8 h-8 rounded-xl insta-gradient-bg flex items-center justify-center text-white shadow-sm focus:outline-none transition active:scale-95" title="">
+          <i data-lucide="instagram" class="w-4 h-4 pointer-events-none"></i>
+        </button>
+        <span class="font-bold text-slate-800 text-sm tracking-tight" id="headerBrandName">Sua Loja & Promoções</span>
+      </div>
+
+      <!-- Quick Action Buttons: Ocultos por padrão para o cliente -->
+      <div id="adminActionGroup" class="hidden flex items-center space-x-1">
+        <button onclick="openModal('qrModal')" class="p-2 text-slate-600 hover:text-slate-900 rounded-full hover:bg-slate-100 transition" title="Gerar QR Code">
+          <i data-lucide="qr-code" class="w-5 h-5"></i>
+        </button>
+        <button onclick="openModal('adminModal')" class="p-2 text-pink-600 hover:text-pink-700 rounded-full hover:bg-pink-50 transition" title="Painel / Exportar Contatos">
+          <i data-lucide="database" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Body -->
+  <main class="flex-grow flex items-center justify-center p-4 sm:p-6">
+    <div class="w-full max-w-md bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100 overflow-hidden relative">
+
+      <!-- Gradient Top Accent Bar -->
+      <div class="h-2 w-full insta-gradient-bg"></div>
+
+      <!-- VIEW 1: REGISTRATION FORM -->
+      <div id="formSection" class="p-6 sm:p-8">
+        <div class="text-center mb-6">
+          <div class="inline-flex items-center justify-center p-3 rounded-2xl bg-gradient-to-tr from-pink-50 to-orange-50 border border-pink-100 shadow-sm mb-3">
+            <i data-lucide="sparkles" class="w-7 h-7 text-pink-600"></i>
+          </div>
+          <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Check-in Especial</h1>
+          <p class="text-xs text-slate-500 mt-1 font-medium">Preencha seus dados para concorrer a vantagens exclusivas e nos acompanhe no Instagram!</p>
+        </div>
+
+        <div id="alertBox" class="hidden mb-4 p-3.5 rounded-xl text-xs font-medium border flex items-start space-x-2.5 transition duration-200">
+          <i id="alertIcon" data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
+          <span id="alertMessage"></span>
+        </div>
+
+        <form id="leadForm" onsubmit="handleFormSubmit(event)" novalidate class="space-y-4">
+          <!-- Nome Completo -->
+          <div>
+            <label for="name" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+              <span>Nome Completo *</span>
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <i data-lucide="user" class="w-4 h-4"></i>
+              </div>
+              <input 
+                type="text" 
+                id="name" 
+                required 
+                placeholder="Ex: Maria Silva"
+                class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:bg-white transition text-slate-800 placeholder-slate-400 font-medium"
+              >
+            </div>
+          </div>
+
+          <!-- CPF -->
+          <div>
+            <label for="cpf" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+              <span>CPF *</span>
+              <span id="cpfStatusText" class="text-[10px] lowercase font-normal text-slate-400">000.000.000-00</span>
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <i data-lucide="credit-card" class="w-4 h-4"></i>
+              </div>
+              <input 
+                type="tel" 
+                id="cpf" 
+                maxlength="14" 
+                required 
+                placeholder="000.000.000-00" 
+                oninput="maskAndValidateCPF(this)"
+                class="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:bg-white transition text-slate-800 placeholder-slate-400 font-medium tracking-wide"
+              >
+              <div id="cpfCheckIcon" class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none hidden text-emerald-500">
+                <i data-lucide="check-circle" class="w-4 h-4"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- WhatsApp / Telefone -->
+          <div>
+            <label for="phone" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              WhatsApp / Telefone *
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <i data-lucide="phone" class="w-4 h-4"></i>
+              </div>
+              <input 
+                type="tel" 
+                id="phone" 
+                maxlength="15" 
+                required 
+                placeholder="(00) 00000-0000" 
+                oninput="maskPhone(this)"
+                class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:bg-white transition text-slate-800 placeholder-slate-400 font-medium"
+              >
+            </div>
+          </div>
+
+          <!-- Consentimento LGPD -->
+          <div class="pt-1">
+            <label class="flex items-start space-x-2.5 cursor-pointer">
+              <input type="checkbox" id="terms" required checked class="mt-0.5 rounded border-slate-300 text-pink-600 focus:ring-pink-500 w-4 h-4">
+              <span class="text-[11px] text-slate-500 leading-tight">
+                Concordo em receber novidades e confirmo meus dados de acordo com a LGPD.
+              </span>
+            </label>
+          </div>
+
+          <!-- Botão Concluir -->
+          <button 
+            type="submit" 
+            id="submitBtn"
+            class="w-full mt-4 py-3.5 px-6 rounded-2xl insta-gradient-bg text-white font-bold text-sm shadow-lg shadow-pink-500/25 hover:opacity-95 active:scale-[0.98] transition flex items-center justify-center space-x-2"
+          >
+            <span>Concluir & Seguir no Instagram</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </form>
+
+        <div class="mt-6 pt-5 border-t border-slate-100 flex items-center justify-center space-x-2 text-xs text-slate-400">
+          <i data-lucide="instagram" class="w-3.5 h-3.5 text-pink-600"></i>
+          <span>Redirecionamento oficial:</span>
+          <span id="targetHandleLabel" class="font-bold text-slate-700">@seuperfil</span>
+        </div>
+      </div>
+
+      <!-- VIEW 2: SUCCESS & REDIRECT SCREEN -->
+      <div id="successSection" class="p-8 text-center hidden">
+        <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-bounce">
+          <i data-lucide="check" class="w-8 h-8 stroke-[3]"></i>
+        </div>
+
+        <h2 class="text-2xl font-bold text-slate-900 mb-1">Cadastro Realizado!</h2>
+        <p class="text-sm text-slate-600 mb-6">Obrigado por se registrar. Estamos levando você para nossa página no Instagram...</p>
+
+        <div class="my-6 flex flex-col items-center justify-center">
+          <div class="relative w-20 h-20 flex items-center justify-center">
+            <svg class="w-full h-full transform -rotate-90">
+              <circle cx="40" cy="40" r="34" stroke="currentColor" stroke-width="5" class="text-slate-100" fill="transparent"/>
+              <circle id="countdownRing" cx="40" cy="40" r="34" stroke="currentColor" stroke-width="5" class="text-pink-600 transition-all duration-1000 ease-linear" stroke-dasharray="213.6" stroke-dashoffset="0" fill="transparent"/>
+            </svg>
+            <span id="countdownNumber" class="absolute text-2xl font-extrabold text-slate-800">3</span>
+          </div>
+          <span class="text-xs text-slate-400 mt-2">Redirecionando em instantes...</span>
+        </div>
+
+        <a 
+          id="directInstaBtn" 
+          href="#" 
+          target="_blank" 
+          class="w-full block py-3.5 px-6 rounded-2xl insta-gradient-bg text-white font-bold text-sm shadow-md hover:opacity-90 transition flex items-center justify-center space-x-2"
+        >
+          <i data-lucide="instagram" class="w-4 h-4"></i>
+          <span>Abrir Instagram Agora</span>
+        </a>
+
+        <button onclick="resetRegistration()" class="mt-4 text-xs font-semibold text-slate-400 hover:text-slate-600 underline">
+          Cadastrar outra pessoa
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- MODAL: QR CODE -->
+  <div id="qrModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl relative">
+      <button onclick="closeModal('qrModal')" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-full">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="text-center mb-4">
+        <h3 class="text-lg font-bold text-slate-900">QR Code para Balcão</h3>
+        <p class="text-xs text-slate-500">Coloque este QR code impresso ou na tela para seus clientes escanearem.</p>
+      </div>
+
+      <div id="printArea" class="bg-gradient-to-b from-pink-50 via-white to-orange-50 border-2 border-pink-200 rounded-2xl p-6 text-center shadow-inner flex flex-col items-center">
+        <div class="w-10 h-10 rounded-xl insta-gradient-bg flex items-center justify-center text-white mb-2 shadow-sm">
+          <i data-lucide="camera" class="w-5 h-5"></i>
+        </div>
+        <h4 class="font-extrabold text-slate-900 text-sm tracking-tight mb-1" id="printStoreName">Siga Nosso Instagram!</h4>
+        <p class="text-[11px] text-slate-500 mb-4 max-w-[200px]">Aponte a câmera do seu celular, cadastre-se e ganhe vantagens</p>
+
+        <div id="qrcode" class="p-3 bg-white rounded-xl shadow-md border border-slate-100 flex items-center justify-center"></div>
+
+        <p class="text-xs font-bold text-pink-600 mt-4 tracking-wide" id="printHandle">@seuperfil</p>
+      </div>
+
+      <div class="mt-5 grid grid-cols-2 gap-2.5">
+        <button onclick="window.print()" class="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl transition flex items-center justify-center space-x-1.5">
+          <i data-lucide="printer" class="w-4 h-4"></i>
+          <span>Imprimir Placa</span>
+        </button>
+        <button onclick="copyCurrentLink()" class="py-2.5 px-4 bg-pink-50 hover:bg-pink-100 text-pink-700 text-xs font-bold rounded-xl transition flex items-center justify-center space-x-1.5">
+          <i data-lucide="copy" class="w-4 h-4"></i>
+          <span>Copiar Link</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADMIN / GERENCIADOR DE LEADS -->
+  <div id="adminModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-lg rounded-3xl p-6 shadow-2xl relative max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+        <div>
+          <h3 class="text-lg font-bold text-slate-900">Gerenciador de Cadastros</h3>
+          <p class="text-xs text-slate-500">Configure o Instagram de destino e exporte seus clientes.</p>
+        </div>
+        <button onclick="closeModal('adminModal')" class="p-2 text-slate-400 hover:text-slate-600 rounded-full">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="overflow-y-auto no-scrollbar space-y-5 flex-grow pr-1">
+        <!-- Config URL -->
+        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+            Link do Perfil do Instagram
+          </label>
+          <div class="flex space-x-2">
+            <input 
+              type="url" 
+              id="instaUrlInput" 
+              value="https://instagram.com/seu.perfil"
+              class="flex-1 px-3 py-2 text-xs bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-pink-500 outline-none"
+            >
+            <button onclick="saveInstagramLink()" class="px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white font-bold text-xs rounded-xl transition">
+              Salvar
+            </button>
+          </div>
+          <span class="text-[10px] text-slate-400 mt-1 block">Insira o link completo (ex: https://instagram.com/sua_loja)</span>
+        </div>
+
+        <!-- Tabela de Leads -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold uppercase text-slate-700 tracking-wider">
+              Contatos Registrados (<span id="leadCount">0</span>)
+            </span>
+            <div class="flex space-x-2">
+              <button onclick="exportToCSV()" class="text-xs text-emerald-600 font-bold hover:underline flex items-center space-x-1">
+                <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                <span>Exportar Excel (CSV)</span>
+              </button>
+              <button onclick="clearLeads()" class="text-xs text-rose-500 font-bold hover:underline flex items-center space-x-1">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                <span>Limpar</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-2xl overflow-hidden max-h-60 overflow-y-auto text-xs">
+            <table class="w-full text-left border-collapse">
+              <thead class="bg-slate-100 text-slate-600 font-semibold sticky top-0">
+                <tr>
+                  <th class="p-2.5">Nome</th>
+                  <th class="p-2.5">CPF</th>
+                  <th class="p-2.5">WhatsApp</th>
+                  <th class="p-2.5">Data/Hora</th>
+                </tr>
+              </thead>
+              <tbody id="leadsTableBody" class="divide-y divide-slate-100 text-slate-700">
+                <!-- Populado dinamicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="w-full py-4 text-center text-xs text-slate-400">
+    <p>Conexão segura • Seus dados estão protegidos</p>
+  </footer>
+
+  <script>
+    const CONFIG = {
+      defaultInsta: 'https://instagram.com/google',
+      storageKeyLeads: 'instaleads_submissions_v1',
+      storageKeyUrl: 'instaleads_target_url_v1',
+      adminSecretPass: '1234' // Senha para abrir o painel secreto
+    };
+
+    let instagramTargetUrl = localStorage.getItem(CONFIG.storageKeyUrl) || CONFIG.defaultInsta;
+    let leads = JSON.parse(localStorage.getItem(CONFIG.storageKeyLeads) || '[]');
+    let qrCodeInstance = null;
+    let countdownTimer = null;
+
+    // Inicialização
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      updateInstagramDisplays();
+      renderLeadsTable();
+      initQRCode();
+      setupSecretAdminAccess();
+    });
+
+    // Controle de Acesso Secreto
+    function setupSecretAdminAccess() {
+      const adminGroup = document.getElementById('adminActionGroup');
+      
+      // Checagem 1: Parâmetro via URL (?admin=1234)
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('admin') === CONFIG.adminSecretPass) {
+        adminGroup.classList.remove('hidden');
+      }
+
+      // Checagem 2: 5 Cliques consecutivos no logo do topo
+      let clickCount = 0;
+      let clickTimer = null;
+      const triggerBtn = document.getElementById('secretAdminTrigger');
+
+      triggerBtn.addEventListener('click', () => {
+        clickCount++;
+        clearTimeout(clickTimer);
+        clickTimer = setTimeout(() => { clickCount = 0; }, 1500);
+
+        if (clickCount >= 5) {
+          clickCount = 0;
+          const enteredPin = prompt('Digite a senha de administrador:');
+          if (enteredPin === CONFIG.adminSecretPass) {
+            adminGroup.classList.remove('hidden');
+            openModal('adminModal');
+          } else if (enteredPin !== null) {
+            alert('Senha incorreta.');
+          }
+        }
+      });
+    }
+
+    // CPF Mask & Algorithm
+    function maskAndValidateCPF(input) {
+      let value = input.value.replace(/\D/g, '');
+      if (value.length > 11) value = value.slice(0, 11);
+
+      let formatted = value;
+      if (value.length > 9) {
+        formatted = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+      } else if (value.length > 6) {
+        formatted = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+      } else if (value.length > 3) {
+        formatted = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+      }
+      input.value = formatted;
+
+      const checkIcon = document.getElementById('cpfCheckIcon');
+      const statusText = document.getElementById('cpfStatusText');
+      
+      if (value.length === 11) {
+        if (isValidCPF(value)) {
+          checkIcon.classList.remove('hidden');
+          statusText.textContent = 'CPF Válido';
+          statusText.className = 'text-[10px] font-semibold text-emerald-600';
+          input.classList.remove('border-rose-400');
+          input.classList.add('border-emerald-400');
+        } else {
+          checkIcon.classList.add('hidden');
+          statusText.textContent = 'CPF Inválido';
+          statusText.className = 'text-[10px] font-semibold text-rose-500';
+          input.classList.add('border-rose-400');
+          input.classList.remove('border-emerald-400');
+        }
+      } else {
+        checkIcon.classList.add('hidden');
+        statusText.textContent = '000.000.000-00';
+        statusText.className = 'text-[10px] lowercase font-normal text-slate-400';
+        input.classList.remove('border-emerald-400', 'border-rose-400');
+      }
+    }
+
+    function isValidCPF(cpf) {
+      if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+      let soma = 0, resto;
+      for (let i = 1; i <= 9; i++) soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+      resto = (soma * 10) % 11;
+      if (resto === 10 || resto === 11) resto = 0;
+      if (resto !== parseInt(cpf.substring(9, 10))) return false;
+
+      soma = 0;
+      for (let i = 1; i <= 10; i++) soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+      resto = (soma * 10) % 11;
+      if (resto === 10 || resto === 11) resto = 0;
+      if (resto !== parseInt(cpf.substring(10, 11))) return false;
+
+      return true;
+    }
+
+    // Telefone Mask
+    function maskPhone(input) {
+      let value = input.value.replace(/\D/g, '');
+      if (value.length > 11) value = value.slice(0, 11);
+
+      let formatted = value;
+      if (value.length > 10) {
+        formatted = value.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+      } else if (value.length > 6) {
+        formatted = value.replace(/^(\d{2})(\d{4,5})(\d{0,4})$/, '($1) $2-$3');
+      } else if (value.length > 2) {
+        formatted = value.replace(/^(\d{2})(\d{0,5})$/, '($1) $2');
+      } else if (value.length > 0) {
+        formatted = value.replace(/^(\d*)/, '($1');
+      }
+      input.value = formatted;
+    }
+
+    function showNotification(msg, type = 'error') {
+      const box = document.getElementById('alertBox');
+      const text = document.getElementById('alertMessage');
+      text.textContent = msg;
+      box.className = type === 'error' 
+        ? 'mb-4 p-3.5 rounded-xl text-xs font-medium border flex items-start space-x-2.5 transition duration-200 bg-rose-50 text-rose-800 border-rose-200' 
+        : 'mb-4 p-3.5 rounded-xl text-xs font-medium border flex items-start space-x-2.5 transition duration-200 bg-emerald-50 text-emerald-800 border-emerald-200';
+      box.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function hideNotification() {
+      document.getElementById('alertBox').classList.add('hidden');
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      hideNotification();
+
+      const name = document.getElementById('name').value.trim();
+      const rawCpf = document.getElementById('cpf').value.replace(/\D/g, '');
+      const rawPhone = document.getElementById('phone').value.replace(/\D/g, '');
+      const terms = document.getElementById('terms').checked;
+
+      if (name.length < 3) {
+        showNotification('Por favor, informe seu nome completo.');
+        document.getElementById('name').focus();
+        return;
+      }
+
+      if (!isValidCPF(rawCpf)) {
+        showNotification('O CPF digitado não é válido. Verifique os números.');
+        document.getElementById('cpf').focus();
+        return;
+      }
+
+      if (rawPhone.length < 10) {
+        showNotification('Informe um número de telefone com DDD válido.');
+        document.getElementById('phone').focus();
+        return;
+      }
+
+      if (!terms) {
+        showNotification('É necessário concordar com os termos para continuar.');
+        return;
+      }
+
+      const newLead = {
+        id: Date.now(),
+        name: name,
+        cpf: document.getElementById('cpf').value,
+        phone: document.getElementById('phone').value,
+        timestamp: new Date().toLocaleString('pt-BR')
+      };
+
+      leads.unshift(newLead);
+      localStorage.setItem(CONFIG.storageKeyLeads, JSON.stringify(leads));
+      renderLeadsTable();
+
+      triggerSuccessRedirect();
+    }
+
+    function triggerSuccessRedirect() {
+      document.getElementById('formSection').classList.add('hidden');
+      const successSection = document.getElementById('successSection');
+      successSection.classList.remove('hidden');
+
+      document.getElementById('directInstaBtn').href = instagramTargetUrl;
+
+      let count = 3;
+      const countEl = document.getElementById('countdownNumber');
+      const ringEl = document.getElementById('countdownRing');
+      const circumference = 213.6;
+
+      countEl.textContent = count;
+      ringEl.style.strokeDashoffset = '0';
+
+      countdownTimer = setInterval(() => {
+        count--;
+        if (count >= 0) {
+          countEl.textContent = count;
+          const offset = circumference - (count / 3) * circumference;
+          ringEl.style.strokeDashoffset = offset;
+        }
+
+        if (count === 0) {
+          clearInterval(countdownTimer);
+          window.location.href = instagramTargetUrl;
+        }
+      }, 1000);
+    }
+
+    function resetRegistration() {
+      clearInterval(countdownTimer);
+      document.getElementById('leadForm').reset();
+      document.getElementById('cpfCheckIcon').classList.add('hidden');
+      document.getElementById('cpfStatusText').textContent = '000.000.000-00';
+      document.getElementById('formSection').classList.remove('hidden');
+      document.getElementById('successSection').classList.add('hidden');
+      hideNotification();
+    }
+
+    function initQRCode() {
+      const qrContainer = document.getElementById('qrcode');
+      qrContainer.innerHTML = '';
+      const currentUrl = window.location.href.split('?')[0].split('#')[0];
+      
+      qrCodeInstance = new QRCode(qrContainer, {
+        text: currentUrl,
+        width: 170,
+        height: 170,
+        colorDark: "#1e293b",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    }
+
+    function updateInstagramDisplays() {
+      let handle = '@instagram';
+      try {
+        const urlObj = new URL(instagramTargetUrl);
+        const path = urlObj.pathname.replace(/^\/|\/$/g, '');
+        if (path) handle = '@' + path;
+      } catch(e) {
+        handle = instagramTargetUrl;
+      }
+
+      document.getElementById('targetHandleLabel').textContent = handle;
+      document.getElementById('printHandle').textContent = handle;
+      document.getElementById('instaUrlInput').value = instagramTargetUrl;
+    }
+
+    function saveInstagramLink() {
+      const input = document.getElementById('instaUrlInput').value.trim();
+      if (!input || !input.startsWith('http')) {
+        showCustomPrompt('Link Inválido', 'Insira uma URL válida iniciando com https://');
+        return;
+      }
+
+      instagramTargetUrl = input;
+      localStorage.setItem(CONFIG.storageKeyUrl, instagramTargetUrl);
+      updateInstagramDisplays();
+      showCustomPrompt('Sucesso!', 'Link do Instagram atualizado.');
+    }
+
+    function renderLeadsTable() {
+      const tbody = document.getElementById('leadsTableBody');
+      const countEl = document.getElementById('leadCount');
+      countEl.textContent = leads.length;
+
+      if (leads.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400">Nenhum cadastro realizado ainda.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = leads.map(item => `
+        <tr class="hover:bg-slate-50 transition">
+          <td class="p-2.5 font-medium text-slate-800">${escapeHtml(item.name)}</td>
+          <td class="p-2.5 text-slate-600 font-mono text-[11px]">${escapeHtml(item.cpf)}</td>
+          <td class="p-2.5 text-slate-600">${escapeHtml(item.phone)}</td>
+          <td class="p-2.5 text-slate-400 text-[10px]">${item.timestamp}</td>
+        </tr>
+      `).join('');
+    }
+
+    function exportToCSV() {
+      if (leads.length === 0) {
+        showCustomPrompt('Aviso', 'Não há registros para exportar.');
+        return;
+      }
+
+      let csvContent = "data:text/csv;charset=utf-8,";
+      csvContent += "Nome,CPF,Telefone,Data\n";
+
+      leads.forEach(l => {
+        csvContent += `"${l.name}","${l.cpf}","${l.phone}","${l.timestamp}"\n`;
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `leads_instagram_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function clearLeads() {
+      const confirmed = window.confirm("Deseja apagar todos os contatos salvos?");
+      if (confirmed) {
+        leads = [];
+        localStorage.removeItem(CONFIG.storageKeyLeads);
+        renderLeadsTable();
+      }
+    }
+
+    function copyCurrentLink() {
+      const url = window.location.href.split('?')[0];
+      const el = document.createElement('textarea');
+      el.value = url;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      showCustomPrompt('Link Copiado!', 'O link limpo foi copiado.');
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, function(m) {
+        return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[m];
+      });
+    }
+
+    function showCustomPrompt(title, text) {
+      const toast = document.createElement('div');
+      toast.className = 'fixed bottom-5 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center space-x-3 text-xs font-semibold animate-subtle-pulse transition duration-300';
+      toast.innerHTML = `<span><b>${title}</b>: ${text}</span>`;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
