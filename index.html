@@ -100,10 +100,23 @@
       <div class="flex items-center space-x-3">
         <!-- Gatilho Secreto: 5 toques rápidos abrem o painel admin -->
         <button id="secretAdminTrigger" type="button"
-          class="w-10 h-10 rounded-full p-[2px] insta-ring-border flex items-center justify-center shadow-md focus:outline-none transition active:scale-95"
+          class="w-10 h-10 rounded-full p-[2px] insta-ring-border flex items-center justify-center shadow-md focus:outline-none transition active:scale-95 flex-shrink-0"
           title="">
-          <img src="logo.png" alt="Credcell"
-            class="w-full h-full object-cover rounded-full bg-yellow-400 pointer-events-none">
+          <svg viewBox="0 0 100 100" class="w-full h-full rounded-full pointer-events-none select-none">
+            <circle cx="50" cy="50" r="50" fill="#FACC15"/>
+            <!-- Smartphone frame -->
+            <rect x="22" y="24" width="22" height="38" rx="4" fill="#121212" stroke="#000000" stroke-width="1.5"/>
+            <rect x="25" y="29" width="16" height="26" rx="1.5" fill="#FACC15"/>
+            <!-- Chip / Sim card pattern inside screen -->
+            <rect x="28" y="34" width="10" height="8" rx="1.5" fill="#121212"/>
+            <line x1="33" y1="34" x2="33" y2="42" stroke="#FACC15" stroke-width="0.8"/>
+            <line x1="28" y1="38" x2="38" y2="38" stroke="#FACC15" stroke-width="0.8"/>
+            <!-- Home indicator dot -->
+            <circle cx="33" cy="58" r="1.5" fill="#FACC15"/>
+            <!-- Typography Cred Cell -->
+            <text x="48" y="42" fill="#121212" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="14" letter-spacing="-0.5">CRED</text>
+            <text x="48" y="55" fill="#121212" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="13" letter-spacing="-0.5">CELL</text>
+          </svg>
         </button>
         <span class="font-extrabold text-white text-base tracking-tight" id="headerBrandName">Credcell</span>
       </div>
@@ -135,7 +148,23 @@
       <div id="formSection" class="p-6 sm:p-8">
         <div class="text-center mb-6">
           <div class="inline-flex items-center justify-center p-1 rounded-full insta-ring-border shadow-lg mb-3">
-            <img src="logo.png" alt="Credcell Logótipo" class="w-20 h-20 rounded-full bg-yellow-400 object-cover">
+            <div class="w-20 h-20 rounded-full overflow-hidden bg-yellow-400">
+              <svg viewBox="0 0 100 100" class="w-full h-full select-none">
+                <circle cx="50" cy="50" r="50" fill="#FACC15"/>
+                <!-- Smartphone frame -->
+                <rect x="22" y="24" width="22" height="38" rx="4" fill="#121212" stroke="#000000" stroke-width="1.5"/>
+                <rect x="25" y="29" width="16" height="26" rx="1.5" fill="#FACC15"/>
+                <!-- Chip / Sim card pattern inside screen -->
+                <rect x="28" y="34" width="10" height="8" rx="1.5" fill="#121212"/>
+                <line x1="33" y1="34" x2="33" y2="42" stroke="#FACC15" stroke-width="0.8"/>
+                <line x1="28" y1="38" x2="38" y2="38" stroke="#FACC15" stroke-width="0.8"/>
+                <!-- Home indicator dot -->
+                <circle cx="33" cy="58" r="1.5" fill="#FACC15"/>
+                <!-- Typography Cred Cell -->
+                <text x="48" y="42" fill="#121212" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="14" letter-spacing="-0.5">CRED</text>
+                <text x="48" y="55" fill="#121212" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="13" letter-spacing="-0.5">CELL</text>
+              </svg>
+            </div>
           </div>
           <h1 class="text-2xl font-black text-white tracking-tight mt-1">Check-in Premiado</h1>
           <p class="text-xs text-zinc-400 mt-1 font-medium">Cadastre-se para participar dos sorteios e siga o nosso
@@ -280,8 +309,24 @@
 
       <div id="printArea"
         class="bg-black border-2 border-yellow-400 rounded-2xl p-6 text-center flex flex-col items-center">
-        <div class="w-14 h-14 rounded-full p-[2px] insta-ring-border mb-3 shadow-md">
-          <img src="logo.png" alt="Credcell" class="w-full h-full object-cover rounded-full bg-yellow-400">
+        <div class="w-14 h-14 rounded-full p-[2px] insta-ring-border mb-3 shadow-md flex items-center justify-center">
+          <div class="w-full h-full rounded-full overflow-hidden bg-yellow-400">
+            <svg viewBox="0 0 100 100" class="w-full h-full select-none">
+              <circle cx="50" cy="50" r="50" fill="#FACC15"/>
+              <!-- Smartphone frame -->
+              <rect x="22" y="24" width="22" height="38" rx="4" fill="#121212" stroke="#000000" stroke-width="1.5"/>
+              <rect x="25" y="29" width="16" height="26" rx="1.5" fill="#FACC15"/>
+              <!-- Chip / Sim card pattern inside screen -->
+              <rect x="28" y="34" width="10" height="8" rx="1.5" fill="#121212"/>
+              <line x1="33" y1="34" x2="33" y2="42" stroke="#FACC15" stroke-width="0.8"/>
+              <line x1="28" y1="38" x2="38" y2="38" stroke="#FACC15" stroke-width="0.8"/>
+              <!-- Home indicator dot -->
+              <circle cx="33" cy="58" r="1.5" fill="#FACC15"/>
+              <!-- Typography Cred Cell -->
+              <text x="48" y="42" fill="#121212" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="14" letter-spacing="-0.5">CRED</text>
+              <text x="48" y="55" fill="#121212" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="13" letter-spacing="-0.5">CELL</text>
+            </svg>
+          </div>
         </div>
         <h4 class="font-black text-white text-base tracking-tight mb-1">Siga a Credcell!</h4>
         <p class="text-[11px] text-zinc-400 mb-4 max-w-[200px]">Aponte a câmara do telemóvel, faça o check-in e concorra
