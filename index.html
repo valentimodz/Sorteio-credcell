@@ -30,11 +30,10 @@
           },
           colors: {
             brand: {
-              50: '#fdf2f8',
-              100: '#fce7f3',
-              500: '#ec4899',
-              600: '#db2777',
-              700: '#be185d',
+              yellow: '#FACC15',
+              darkYellow: '#EAB308',
+              black: '#121212',
+              card: '#1E1E1E',
             }
           }
         }
@@ -43,7 +42,7 @@
   </script>
 
   <style>
-    .insta-gradient-bg {
+    .insta-ring-border {
       background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
     }
 
@@ -93,30 +92,30 @@
 </head>
 
 <body
-  class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-pink-500 selection:text-white">
+  class="bg-black text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-yellow-400 selection:text-black">
 
   <!-- Header / Barra de Navegação -->
-  <header class="w-full bg-white/80 backdrop-blur-md sticky top-0 z-30 border-b border-slate-200">
-    <div class="max-w-md mx-auto px-4 h-14 flex items-center justify-between">
-      <div class="flex items-center space-x-2">
+  <header class="w-full bg-[#18181b]/90 backdrop-blur-md sticky top-0 z-30 border-b border-zinc-800">
+    <div class="max-w-md mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
         <!-- Gatilho Secreto: 5 toques rápidos abrem o painel admin -->
         <button id="secretAdminTrigger" type="button"
-          class="w-8 h-8 rounded-xl insta-gradient-bg flex items-center justify-center text-white shadow-sm focus:outline-none transition active:scale-95"
+          class="w-10 h-10 rounded-full p-[2px] insta-ring-border flex items-center justify-center shadow-md focus:outline-none transition active:scale-95"
           title="">
-          <i data-lucide="instagram" class="w-4 h-4 pointer-events-none"></i>
+          <img src="logo.png" alt="Credcell"
+            class="w-full h-full object-cover rounded-full bg-yellow-400 pointer-events-none">
         </button>
-        <span class="font-bold text-slate-800 text-sm tracking-tight" id="headerBrandName">Credcell & Promoções</span>
+        <span class="font-extrabold text-white text-base tracking-tight" id="headerBrandName">Credcell</span>
       </div>
 
       <!-- Botões Ocultos do Administrador -->
       <div id="adminActionGroup" class="hidden flex items-center space-x-1">
         <button onclick="openModal('qrModal')"
-          class="p-2 text-slate-600 hover:text-slate-900 rounded-full hover:bg-slate-100 transition"
-          title="Gerar QR Code">
+          class="p-2 text-zinc-400 hover:text-white rounded-full hover:bg-zinc-800 transition" title="Gerar QR Code">
           <i data-lucide="qr-code" class="w-5 h-5"></i>
         </button>
         <button onclick="openModal('adminModal')"
-          class="p-2 text-pink-600 hover:text-pink-700 rounded-full hover:bg-pink-50 transition"
+          class="p-2 text-yellow-400 hover:text-yellow-300 rounded-full hover:bg-zinc-800 transition"
           title="Painel / Exportar Contatos">
           <i data-lucide="database" class="w-5 h-5"></i>
         </button>
@@ -127,24 +126,24 @@
   <!-- Corpo Principal -->
   <main class="flex-grow flex items-center justify-center p-4 sm:p-6">
     <div
-      class="w-full max-w-md bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100 overflow-hidden relative">
+      class="w-full max-w-md bg-[#18181b] rounded-3xl shadow-2xl shadow-yellow-500/5 border border-zinc-800 overflow-hidden relative">
 
-      <div class="h-2 w-full insta-gradient-bg"></div>
+      <!-- Linha de Destaque Superior em Amarelo -->
+      <div class="h-2 w-full bg-yellow-400"></div>
 
       <!-- TELA 1: FORMULÁRIO DE CADASTRO -->
       <div id="formSection" class="p-6 sm:p-8">
         <div class="text-center mb-6">
-          <div
-            class="inline-flex items-center justify-center p-3 rounded-2xl bg-gradient-to-tr from-pink-50 to-orange-50 border border-pink-100 shadow-sm mb-3">
-            <i data-lucide="sparkles" class="w-7 h-7 text-pink-600"></i>
+          <div class="inline-flex items-center justify-center p-1 rounded-full insta-ring-border shadow-lg mb-3">
+            <img src="logo.png" alt="Credcell Logótipo" class="w-20 h-20 rounded-full bg-yellow-400 object-cover">
           </div>
-          <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Check-in Especial</h1>
-          <p class="text-xs text-slate-500 mt-1 font-medium">Preencha os seus dados para concorrer a vantagens
-            exclusivas e siga-nos no Instagram!</p>
+          <h1 class="text-2xl font-black text-white tracking-tight mt-1">Check-in Premiado</h1>
+          <p class="text-xs text-zinc-400 mt-1 font-medium">Cadastre-se para participar dos sorteios e siga o nosso
+            Instagram!</p>
         </div>
 
         <div id="alertBox"
-          class="hidden mb-4 p-3.5 rounded-xl text-xs font-medium border flex items-start space-x-2.5 transition duration-200">
+          class="hidden mb-4 p-3.5 rounded-xl text-xs font-semibold border flex items-start space-x-2.5 transition duration-200">
           <i id="alertIcon" data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
           <span id="alertMessage"></span>
         </div>
@@ -152,34 +151,34 @@
         <form id="leadForm" onsubmit="handleFormSubmit(event)" novalidate class="space-y-4">
           <!-- Nome -->
           <div>
-            <label for="name" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+            <label for="name" class="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-1.5">
               Nome Completo *
             </label>
             <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
                 <i data-lucide="user" class="w-4 h-4"></i>
               </div>
-              <input type="text" id="name" required placeholder="Ex: Maria Silva"
-                class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:bg-white transition text-slate-800 placeholder-slate-400 font-medium">
+              <input type="text" id="name" required placeholder="Ex: Pedro Henrique"
+                class="w-full pl-10 pr-4 py-3 bg-zinc-900 border border-zinc-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 focus:bg-black transition text-white placeholder-zinc-500 font-medium">
             </div>
           </div>
 
           <!-- CPF -->
           <div>
             <label for="cpf"
-              class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+              class="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
               <span>CPF *</span>
-              <span id="cpfStatusText" class="text-[10px] lowercase font-normal text-slate-400">000.000.000-00</span>
+              <span id="cpfStatusText" class="text-[10px] lowercase font-normal text-zinc-500">000.000.000-00</span>
             </label>
             <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
                 <i data-lucide="credit-card" class="w-4 h-4"></i>
               </div>
               <input type="tel" id="cpf" maxlength="14" required placeholder="000.000.000-00"
                 oninput="maskAndValidateCPF(this)"
-                class="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:bg-white transition text-slate-800 placeholder-slate-400 font-medium tracking-wide">
+                class="w-full pl-10 pr-10 py-3 bg-zinc-900 border border-zinc-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 focus:bg-black transition text-white placeholder-zinc-500 font-medium tracking-wide">
               <div id="cpfCheckIcon"
-                class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none hidden text-emerald-500">
+                class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none hidden text-yellow-400">
                 <i data-lucide="check-circle" class="w-4 h-4"></i>
               </div>
             </div>
@@ -187,16 +186,16 @@
 
           <!-- WhatsApp -->
           <div>
-            <label for="phone" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-              WhatsApp / Telefone *
+            <label for="phone" class="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-1.5">
+              WhatsApp / Telemóvel *
             </label>
             <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
                 <i data-lucide="phone" class="w-4 h-4"></i>
               </div>
               <input type="tel" id="phone" maxlength="15" required placeholder="(00) 00000-0000"
                 oninput="maskPhone(this)"
-                class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:bg-white transition text-slate-800 placeholder-slate-400 font-medium">
+                class="w-full pl-10 pr-4 py-3 bg-zinc-900 border border-zinc-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 focus:bg-black transition text-white placeholder-zinc-500 font-medium">
             </div>
           </div>
 
@@ -204,61 +203,61 @@
           <div class="pt-1">
             <label class="flex items-start space-x-2.5 cursor-pointer">
               <input type="checkbox" id="terms" required checked
-                class="mt-0.5 rounded border-slate-300 text-pink-600 focus:ring-pink-500 w-4 h-4">
-              <span class="text-[11px] text-slate-500 leading-tight">
-                Concordo em receber novidades e confirmo os meus dados de acordo com a LGPD.
+                class="mt-0.5 rounded border-zinc-700 bg-zinc-900 text-yellow-400 focus:ring-yellow-400 w-4 h-4">
+              <span class="text-[11px] text-zinc-400 leading-tight">
+                Concordo em participar das promoções e autorizo o contacto nos termos da LGPD.
               </span>
             </label>
           </div>
 
           <!-- Botão Submeter -->
           <button type="submit" id="submitBtn"
-            class="w-full mt-4 py-3.5 px-6 rounded-2xl insta-gradient-bg text-white font-bold text-sm shadow-lg shadow-pink-500/25 hover:opacity-95 active:scale-[0.98] transition flex items-center justify-center space-x-2">
+            class="w-full mt-4 py-3.5 px-6 rounded-2xl bg-yellow-400 hover:bg-yellow-300 text-black font-extrabold text-sm shadow-lg shadow-yellow-400/20 active:scale-[0.98] transition flex items-center justify-center space-x-2">
             <span>Concluir & Seguir no Instagram</span>
             <i data-lucide="arrow-right" class="w-4 h-4"></i>
           </button>
         </form>
 
         <div
-          class="mt-6 pt-5 border-t border-slate-100 flex items-center justify-center space-x-2 text-xs text-slate-400">
-          <i data-lucide="instagram" class="w-3.5 h-3.5 text-pink-600"></i>
+          class="mt-6 pt-5 border-t border-zinc-800 flex items-center justify-center space-x-2 text-xs text-zinc-400">
+          <i data-lucide="instagram" class="w-3.5 h-3.5 text-yellow-400"></i>
           <span>Redirecionamento oficial:</span>
-          <span id="targetHandleLabel" class="font-bold text-slate-700">@credcell_mrb</span>
+          <span id="targetHandleLabel" class="font-bold text-white">@credcell_mrb</span>
         </div>
       </div>
 
       <!-- TELA 2: SUCESSO & REDIRECIONAMENTO -->
       <div id="successSection" class="p-8 text-center hidden">
         <div
-          class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-bounce">
+          class="w-16 h-16 bg-yellow-400/10 text-yellow-400 border border-yellow-400/30 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-bounce">
           <i data-lucide="check" class="w-8 h-8 stroke-[3]"></i>
         </div>
 
-        <h2 class="text-2xl font-bold text-slate-900 mb-1">Cadastro Realizado!</h2>
-        <p class="text-sm text-slate-600 mb-6">A encaminhar para a nossa página oficial no Instagram...</p>
+        <h2 class="text-2xl font-black text-white mb-1">Check-in Concluído!</h2>
+        <p class="text-sm text-zinc-400 mb-6">Estamos a encaminhá-lo para a nossa página oficial no Instagram...</p>
 
         <div class="my-6 flex flex-col items-center justify-center">
           <div class="relative w-20 h-20 flex items-center justify-center">
             <svg class="w-full h-full transform -rotate-90">
-              <circle cx="40" cy="40" r="34" stroke="currentColor" stroke-width="5" class="text-slate-100"
+              <circle cx="40" cy="40" r="34" stroke="currentColor" stroke-width="5" class="text-zinc-800"
                 fill="transparent" />
               <circle id="countdownRing" cx="40" cy="40" r="34" stroke="currentColor" stroke-width="5"
-                class="text-pink-600 transition-all duration-1000 ease-linear" stroke-dasharray="213.6"
+                class="text-yellow-400 transition-all duration-1000 ease-linear" stroke-dasharray="213.6"
                 stroke-dashoffset="0" fill="transparent" />
             </svg>
-            <span id="countdownNumber" class="absolute text-2xl font-extrabold text-slate-800">3</span>
+            <span id="countdownNumber" class="absolute text-2xl font-black text-white">3</span>
           </div>
-          <span class="text-xs text-slate-400 mt-2">A redirecionar em instantes...</span>
+          <span class="text-xs text-zinc-500 mt-2">A redirecionar em instantes...</span>
         </div>
 
         <a id="directInstaBtn" href="#"
-          class="w-full block py-3.5 px-6 rounded-2xl insta-gradient-bg text-white font-bold text-sm shadow-md hover:opacity-90 transition flex items-center justify-center space-x-2">
+          class="w-full block py-3.5 px-6 rounded-2xl bg-yellow-400 hover:bg-yellow-300 text-black font-extrabold text-sm shadow-md transition flex items-center justify-center space-x-2">
           <i data-lucide="instagram" class="w-4 h-4"></i>
           <span>Abrir Instagram Agora</span>
         </a>
 
         <button onclick="resetRegistration()"
-          class="mt-4 text-xs font-semibold text-slate-400 hover:text-slate-600 underline">
+          class="mt-4 text-xs font-semibold text-zinc-500 hover:text-zinc-300 underline">
           Cadastrar outra pessoa
         </button>
       </div>
@@ -266,43 +265,41 @@
     </div>
   </main>
 
-  <!-- MODAL: QR CODE -->
-  <div id="qrModal"
-    class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl relative">
+  <!-- MODAL: QR CODE PARA IMPRESSÃO -->
+  <div id="qrModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-[#18181b] border border-zinc-800 w-full max-w-sm rounded-3xl p-6 shadow-2xl relative">
       <button onclick="closeModal('qrModal')"
-        class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-full">
+        class="absolute top-4 right-4 p-2 text-zinc-400 hover:text-white rounded-full">
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
 
       <div class="text-center mb-4">
-        <h3 class="text-lg font-bold text-slate-900">QR Code para Balcão</h3>
-        <p class="text-xs text-slate-500">Coloque este QR code impresso ou no ecrã para os clientes lerem.</p>
+        <h3 class="text-lg font-bold text-white">Placa de Balcão (QR Code)</h3>
+        <p class="text-xs text-zinc-400">Imprima para expor no balcão da loja.</p>
       </div>
 
       <div id="printArea"
-        class="bg-gradient-to-b from-pink-50 via-white to-orange-50 border-2 border-pink-200 rounded-2xl p-6 text-center shadow-inner flex flex-col items-center">
-        <div class="w-10 h-10 rounded-xl insta-gradient-bg flex items-center justify-center text-white mb-2 shadow-sm">
-          <i data-lucide="camera" class="w-5 h-5"></i>
+        class="bg-black border-2 border-yellow-400 rounded-2xl p-6 text-center flex flex-col items-center">
+        <div class="w-14 h-14 rounded-full p-[2px] insta-ring-border mb-3 shadow-md">
+          <img src="logo.png" alt="Credcell" class="w-full h-full object-cover rounded-full bg-yellow-400">
         </div>
-        <h4 class="font-extrabold text-slate-900 text-sm tracking-tight mb-1">Siga a Credcell!</h4>
-        <p class="text-[11px] text-slate-500 mb-4 max-w-[200px]">Aponte a câmara do telemóvel, faça o check-in e
-          concorra a vantagens</p>
+        <h4 class="font-black text-white text-base tracking-tight mb-1">Siga a Credcell!</h4>
+        <p class="text-[11px] text-zinc-400 mb-4 max-w-[200px]">Aponte a câmara do telemóvel, faça o check-in e concorra
+          a prémios exclusivos</p>
 
-        <div id="qrcode"
-          class="p-3 bg-white rounded-xl shadow-md border border-slate-100 flex items-center justify-center"></div>
+        <div id="qrcode" class="p-3 bg-white rounded-xl shadow-md flex items-center justify-center"></div>
 
-        <p class="text-xs font-bold text-pink-600 mt-4 tracking-wide">@credcell_mrb</p>
+        <p class="text-xs font-extrabold text-yellow-400 mt-4 tracking-wide">@credcell_mrb</p>
       </div>
 
       <div class="mt-5 grid grid-cols-2 gap-2.5">
         <button onclick="window.print()"
-          class="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl transition flex items-center justify-center space-x-1.5">
+          class="py-2.5 px-4 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-bold rounded-xl transition flex items-center justify-center space-x-1.5">
           <i data-lucide="printer" class="w-4 h-4"></i>
           <span>Imprimir Placa</span>
         </button>
         <button onclick="copyCurrentLink()"
-          class="py-2.5 px-4 bg-pink-50 hover:bg-pink-100 text-pink-700 text-xs font-bold rounded-xl transition flex items-center justify-center space-x-1.5">
+          class="py-2.5 px-4 bg-yellow-400 hover:bg-yellow-300 text-black text-xs font-bold rounded-xl transition flex items-center justify-center space-x-1.5">
           <i data-lucide="copy" class="w-4 h-4"></i>
           <span>Copiar Link</span>
         </button>
@@ -312,14 +309,15 @@
 
   <!-- MODAL: ADMIN / EXPORTADOR -->
   <div id="adminModal"
-    class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white w-full max-w-lg rounded-3xl p-6 shadow-2xl relative max-h-[90vh] flex flex-col">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+    class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div
+      class="bg-[#18181b] border border-zinc-800 w-full max-w-lg rounded-3xl p-6 shadow-2xl relative max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-zinc-800 mb-4">
         <div>
-          <h3 class="text-lg font-bold text-slate-900">Gerenciador de Cadastros</h3>
-          <p class="text-xs text-slate-500">Histórico de contactos registados localmente neste dispositivo.</p>
+          <h3 class="text-lg font-bold text-white">Gerenciador de Cadastros</h3>
+          <p class="text-xs text-zinc-400">Histórico de contactos registados localmente neste navegador.</p>
         </div>
-        <button onclick="closeModal('adminModal')" class="p-2 text-slate-400 hover:text-slate-600 rounded-full">
+        <button onclick="closeModal('adminModal')" class="p-2 text-zinc-400 hover:text-white rounded-full">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
@@ -327,12 +325,12 @@
       <div class="overflow-y-auto no-scrollbar space-y-5 flex-grow pr-1">
         <div>
           <div class="flex items-center justify-between mb-2">
-            <span class="text-xs font-bold uppercase text-slate-700 tracking-wider">
-              Contatos (<span id="leadCount">0</span>)
+            <span class="text-xs font-bold uppercase text-zinc-300 tracking-wider">
+              Contactos (<span id="leadCount">0</span>)
             </span>
             <div class="flex space-x-2">
               <button onclick="exportToCSV()"
-                class="text-xs text-emerald-600 font-bold hover:underline flex items-center space-x-1">
+                class="text-xs text-yellow-400 font-bold hover:underline flex items-center space-x-1">
                 <i data-lucide="download" class="w-3.5 h-3.5"></i>
                 <span>Exportar CSV</span>
               </button>
@@ -344,16 +342,16 @@
             </div>
           </div>
 
-          <div class="border border-slate-200 rounded-2xl overflow-hidden max-h-60 overflow-y-auto text-xs">
+          <div class="border border-zinc-800 rounded-2xl overflow-hidden max-h-60 overflow-y-auto text-xs bg-black">
             <table class="w-full text-left border-collapse">
-              <thead class="bg-slate-100 text-slate-600 font-semibold sticky top-0">
+              <thead class="bg-zinc-900 text-zinc-400 font-semibold sticky top-0 border-b border-zinc-800">
                 <tr>
                   <th class="p-2.5">Nome</th>
                   <th class="p-2.5">CPF</th>
                   <th class="p-2.5">WhatsApp</th>
                 </tr>
               </thead>
-              <tbody id="leadsTableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
+              <tbody id="leadsTableBody" class="divide-y divide-zinc-800 text-zinc-300"></tbody>
             </table>
           </div>
         </div>
@@ -361,8 +359,8 @@
     </div>
   </div>
 
-  <footer class="w-full py-4 text-center text-xs text-slate-400">
-    <p>Conexão segura • Os seus dados estão protegidos</p>
+  <footer class="w-full py-4 text-center text-xs text-zinc-500">
+    <p>Conexão segura • Credcell © Todos os direitos reservados</p>
   </footer>
 
   <script>
@@ -437,21 +435,21 @@
         if (isValidCPF(value)) {
           checkIcon.classList.remove('hidden');
           statusText.textContent = 'CPF Válido';
-          statusText.className = 'text-[10px] font-semibold text-emerald-600';
-          input.classList.remove('border-rose-400');
-          input.classList.add('border-emerald-400');
+          statusText.className = 'text-[10px] font-semibold text-yellow-400';
+          input.classList.remove('border-rose-500');
+          input.classList.add('border-yellow-400');
         } else {
           checkIcon.classList.add('hidden');
           statusText.textContent = 'CPF Inválido';
           statusText.className = 'text-[10px] font-semibold text-rose-500';
-          input.classList.add('border-rose-400');
-          input.classList.remove('border-emerald-400');
+          input.classList.add('border-rose-500');
+          input.classList.remove('border-yellow-400');
         }
       } else {
         checkIcon.classList.add('hidden');
         statusText.textContent = '000.000.000-00';
-        statusText.className = 'text-[10px] lowercase font-normal text-slate-400';
-        input.classList.remove('border-emerald-400', 'border-rose-400');
+        statusText.className = 'text-[10px] lowercase font-normal text-zinc-500';
+        input.classList.remove('border-yellow-400', 'border-rose-500');
       }
     }
 
@@ -494,8 +492,8 @@
       const text = document.getElementById('alertMessage');
       text.textContent = msg;
       box.className = type === 'error'
-        ? 'mb-4 p-3.5 rounded-xl text-xs font-medium border flex items-start space-x-2.5 transition duration-200 bg-rose-50 text-rose-800 border-rose-200'
-        : 'mb-4 p-3.5 rounded-xl text-xs font-medium border flex items-start space-x-2.5 transition duration-200 bg-emerald-50 text-emerald-800 border-emerald-200';
+        ? 'mb-4 p-3.5 rounded-xl text-xs font-semibold border flex items-start space-x-2.5 transition duration-200 bg-rose-950/40 text-rose-300 border-rose-800'
+        : 'mb-4 p-3.5 rounded-xl text-xs font-semibold border flex items-start space-x-2.5 transition duration-200 bg-yellow-950/40 text-yellow-300 border-yellow-800';
       box.classList.remove('hidden');
       lucide.createIcons();
     }
@@ -520,7 +518,7 @@
       }
 
       if (!isValidCPF(rawCpf)) {
-        showNotification('O CPF digitado não é válido. Verifique os números.');
+        showNotification('O CPF inserido não é válido. Verifique os números.');
         document.getElementById('cpf').focus();
         return;
       }
@@ -539,9 +537,9 @@
       const submitBtn = document.getElementById('submitBtn');
       const originalBtnContent = submitBtn.innerHTML;
       submitBtn.disabled = true;
-      submitBtn.innerHTML = `<span>Processando cadastro...</span>`;
+      submitBtn.innerHTML = `<span>A registar...</span>`;
 
-      // Envia estritamente as 3 colunas configuradas na folha
+      // Envia as 3 colunas para a folha
       const leadPayload = {
         Nome: name,
         CPF: document.getElementById('cpf').value,
@@ -621,7 +619,7 @@
         text: currentUrl,
         width: 170,
         height: 170,
-        colorDark: "#1e293b",
+        colorDark: "#000000",
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.H
       });
@@ -633,15 +631,15 @@
       countEl.textContent = leads.length;
 
       if (leads.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-slate-400">Nenhum registo local.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-zinc-500">Nenhum registo local.</td></tr>`;
         return;
       }
 
       tbody.innerHTML = leads.map(item => `
-        <tr class="hover:bg-slate-50 transition">
-          <td class="p-2.5 font-medium text-slate-800">${escapeHtml(item.Nome || '')}</td>
-          <td class="p-2.5 text-slate-600 font-mono text-[11px]">${escapeHtml(item.CPF || '')}</td>
-          <td class="p-2.5 text-slate-600">${escapeHtml(item.WhatsApp || '')}</td>
+        <tr class="hover:bg-zinc-900 transition">
+          <td class="p-2.5 font-medium text-white">${escapeHtml(item.Nome || '')}</td>
+          <td class="p-2.5 text-zinc-400 font-mono text-[11px]">${escapeHtml(item.CPF || '')}</td>
+          <td class="p-2.5 text-zinc-400">${escapeHtml(item.WhatsApp || '')}</td>
         </tr>
       `).join('');
     }
@@ -684,7 +682,7 @@
       el.select();
       document.execCommand('copy');
       document.body.removeChild(el);
-      alert('Link copiado para a área de transferência!');
+      alert('Link copiado com sucesso!');
     }
 
     function openModal(id) {
