@@ -140,7 +140,7 @@
               <img src="logo.png" alt="Credcell Logótipo" class="w-full h-full object-contain select-none">
             </div>
           </div>
-          <h1 class="text-2xl font-black text-white tracking-tight mt-1">Check-in Premiado</h1>
+          <h1 class="text-2xl font-black text-white tracking-tight mt-1">Cred Cell</h1>
           <p class="text-xs text-zinc-400 mt-1 font-medium">Cadastre-se para participar dos sorteios e siga o nosso
             Instagram!</p>
         </div>
@@ -365,7 +365,7 @@
   </div>
 
   <footer class="w-full py-4 text-center text-xs text-zinc-500">
-    <p>Conexão segura • Credcell © Todos os direitos reservados</p>
+    <p>© 2026 Vextron Lab | Developed by @Valentim</p>
   </footer>
 
   <script>
@@ -512,8 +512,10 @@
       hideNotification();
 
       const name = document.getElementById('name').value.trim();
-      const rawCpf = document.getElementById('cpf').value.replace(/\D/g, '');
-      const rawPhone = document.getElementById('phone').value.replace(/\D/g, '');
+      const formattedCpf = document.getElementById('cpf').value.trim();
+      const rawCpf = formattedCpf.replace(/\D/g, '');
+      const formattedPhone = document.getElementById('phone').value.trim();
+      const rawPhone = formattedPhone.replace(/\D/g, '');
       const terms = document.getElementById('terms').checked;
 
       if (name.length < 3) {
@@ -539,20 +541,53 @@
         return;
       }
 
+      // Validação 1: Verificação preliminar local (localStorage)
+      const localDuplicate = leads.find(l => {
+        const lCpf = (l.CPF || '').replace(/\D/g, '');
+        const lPhone = (l.WhatsApp || '').replace(/\D/g, '');
+        return (lCpf && lCpf === rawCpf) || (lPhone && lPhone === rawPhone);
+      });
+
+      if (localDuplicate) {
+        showNotification('Este CPF ou número de WhatsApp já se encontra registado no sorteio!', 'error');
+        return;
+      }
+
       const submitBtn = document.getElementById('submitBtn');
       const originalBtnContent = submitBtn.innerHTML;
       submitBtn.disabled = true;
-      submitBtn.innerHTML = `<span>A registar...</span>`;
-
-      // Envia as 3 colunas para a folha
-      const leadPayload = {
-        Nome: name,
-        CPF: document.getElementById('cpf').value,
-        WhatsApp: document.getElementById('phone').value
-      };
+      submitBtn.innerHTML = `<span>A verificar registo...</span>`;
 
       try {
-        await fetch(CONFIG.sheetsApiUrl, {
+        // Validação 2: Consulta de unicidade na base remota do SheetDB
+        const searchUrl = `${CONFIG.sheetsApiUrl}/search?CPF=${encodeURIComponent(formattedCpf)}`;
+        const checkResponse = await fetch(searchUrl, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        if (checkResponse.ok) {
+          const existingRecords = await checkResponse.json();
+          if (Array.isArray(existingRecords) && existingRecords.length > 0) {
+            showNotification('Este CPF já se encontra registado no sorteio!', 'error');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnContent;
+            return;
+          }
+        }
+
+        submitBtn.innerHTML = `<span>A registar...</span>`;
+
+        // Envia as 3 colunas para a folha
+        const leadPayload = {
+          Nome: name,
+          CPF: formattedCpf,
+          WhatsApp: formattedPhone
+        };
+
+        const postResponse = await fetch(CONFIG.sheetsApiUrl, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -563,14 +598,18 @@
           })
         });
 
+        if (!postResponse.ok) {
+          throw new Error('Falha na resposta do servidor.');
+        }
+
         leads.unshift(leadPayload);
         localStorage.setItem(CONFIG.storageKeyLeads, JSON.stringify(leads));
         renderLeadsTable();
 
         triggerSuccessRedirect();
       } catch (error) {
-        console.error('Erro na gravação:', error);
-        triggerSuccessRedirect();
+        console.error('Erro no processamento do cadastro:', error);
+        showNotification('Ocorreu um erro ao processar o seu cadastro. Tente novamente mais tarde.', 'error');
       } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalBtnContent;
